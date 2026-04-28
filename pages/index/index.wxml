@@ -1,0 +1,124 @@
+<view class="container">
+  
+  <view class="tab-header">
+    <view 
+      wx:for="{{tabs}}" 
+      wx:key="*this"
+      class="tab-item {{currentTab === index ? 'active' : ''}}"
+      data-index="{{index}}"
+      bindtap="switchTab"
+    >
+      {{item}}
+      <view class="tab-line" wx:if="{{currentTab === index}}"></view>
+    </view>
+  </view>
+
+  <view class="content-area">
+
+    <view class="module-wrapper" wx:if="{{currentTab === 0}}">
+      <view class="wheel-box">
+        <view class="wheel-pointer"></view>
+        
+        <view class="wheel-main" 
+              style="transform: rotate({{wheelDeg}}deg); transition: {{isSpinning ? 'transform 3.5s cubic-bezier(0.2, 0.8, 0.2, 1)' : 'none'}};">
+          
+          <view class="wheel-bg" style="background: {{bgStyle}};"></view>
+          
+          <view class="wheel-text-wrapper" wx:for="{{wheelData}}" wx:key="index" 
+                style="transform: rotate({{item.textRotate}}deg);">
+            <text class="wheel-text">{{item.text}}</text>
+          </view>
+        </view>
+      </view>
+
+      <button class="action-btn" bindtap="startSpin" disabled="{{isSpinning}}">
+        {{isSpinning ? '转动中...' : '开始抽取'}}
+      </button>
+
+      <view class="settings-card">
+        
+        <view class="scene-manager">
+          <view class="scene-header">
+            <text class="section-title">我的场景库</text>
+            <view class="add-scene-btn" bindtap="showAddSceneModal">+ 新建</view>
+          </view>
+          
+          <scroll-view scroll-x class="scene-scroll">
+            <view class="scene-list">
+              <view wx:for="{{presets}}" wx:for-index="sceneName" wx:key="sceneName" 
+                    class="scene-tab {{currentPresetName === sceneName ? 'active' : ''}}" 
+                    bindtap="switchScene" data-name="{{sceneName}}" bindlongpress="deleteScenePrompt">
+                {{sceneName}}
+              </view>
+            </view>
+          </scroll-view>
+          <text class="hint-text">长按场景名称可删除</text>
+        </view>
+
+        <view class="divider"></view>
+
+        <view class="options-manager">
+          <view class="add-bar">
+            <input class="add-input" value="{{inputValue}}" placeholder="为【{{currentPresetName}}】添加新选项..." bindinput="onInputChange" />
+            <view class="add-btn" bindtap="addOption">添加</view>
+          </view>
+
+          <view class="tag-list">
+            <view class="tag-item" wx:for="{{wheelOptions}}" wx:key="*this" bindtap="deleteOption" data-index="{{index}}">
+              <text>{{item}}</text>
+              <text class="delete-icon">×</text>
+            </view>
+            <text wx:if="{{wheelOptions.length === 0}}" class="empty-hint">当前场景暂无选项，请添加</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="module-wrapper" wx:elif="{{currentTab === 1}}">
+      
+      <view class="settings-card" style="margin-bottom: 20px; margin-top: 10px;">
+        <view class="control-header">
+          <text>选择骰子数量</text>
+          <text style="color: #ff9a44; font-size: 18px;">{{diceCount}} 颗</text>
+        </view>
+        <slider class="dice-slider" min="1" max="6" value="{{diceCount}}" bindchange="changeDiceCount" activeColor="#ff9a44" block-size="24"/>
+      </view>
+
+      <view class="dice-arena">
+        <view class="scene" wx:for="{{diceList}}" wx:key="id">
+          <view class="cube" style="transform: rotateX({{item.rotX}}deg) rotateY({{item.rotY}}deg);">
+            
+            <view class="face front face-1"><view class="dot"></view></view>
+            <view class="face back face-6">
+              <view class="dot"></view><view class="dot"></view><view class="dot"></view>
+              <view class="dot"></view><view class="dot"></view><view class="dot"></view>
+            </view>
+            <view class="face right face-2"><view class="dot"></view><view class="dot"></view></view>
+            <view class="face left face-5">
+              <view class="dot"></view><view class="dot"></view><view class="dot"></view><view class="dot"></view><view class="dot"></view>
+            </view>
+            <view class="face top face-4">
+              <view class="dot"></view><view class="dot"></view><view class="dot"></view><view class="dot"></view>
+            </view>
+            <view class="face bottom face-3">
+              <view class="dot"></view><view class="dot"></view><view class="dot"></view>
+            </view>
+            
+          </view>
+        </view>
+      </view>
+
+      <view class="result-display">
+        <text class="result-text {{isRolling ? 'spinning' : 'done'}}" wx:if="{{diceSum > 0}}" style="color: #ff9a44;">
+          🎲 总点数：{{diceSum}}
+        </text>
+      </view>
+      
+      <button class="action-btn dice-btn" bindtap="startRoll" disabled="{{isRolling}}">
+        {{isRolling ? '摇晃中...' : '开始摇骰'}}
+      </button>
+
+    </view>
+
+  </view>
+</view>

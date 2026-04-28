@@ -1,0 +1,468 @@
+page {
+  background-color: #f4f5f7;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 10px;
+}
+
+/* ================= Tab 样式 ================= */
+.tab-header {
+  width: 90%;
+  display: flex;
+  justify-content: space-around;
+  background-color: #fff;
+  border-radius: 20px;
+  padding: 5px 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  margin-bottom: 20px;
+}
+
+.tab-item {
+  position: relative;
+  font-size: 16px;
+  color: #666;
+  padding: 12px 20px;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.tab-item.active {
+  color: #3498db;
+  font-weight: bold;
+}
+
+.tab-line {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 4px;
+  background-color: #3498db;
+  border-radius: 2px;
+}
+
+/* ================= 内容区通用样式 ================= */
+.content-area {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.module-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card-box {
+  width: 80%;
+  aspect-ratio: 1; /* 保持正方形 */
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+/* ================= 按钮通用样式 ================= */
+.action-btn {
+  width: 70% !important;
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+  border-radius: 30px;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 12px 0;
+  box-shadow: 0 6px 15px rgba(52, 152, 219, 0.3);
+  transition: transform 0.1s;
+}
+
+.action-btn:active {
+  transform: scale(0.95);
+}
+
+.action-btn[disabled] {
+  opacity: 0.7;
+  background: #bdc3c7;
+  box-shadow: none;
+  color: #fff;
+}
+
+/* ================= 转盘专属样式 ================= */
+.wheel-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+}
+.result-text {
+  font-size: 24px;
+  font-weight: bold;
+  color: #e74c3c;
+}
+
+.tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag { background: #f0f7ff; color: #3498db; padding: 4px 10px; border-radius: 10px; font-size: 13px; }
+.edit-hint { display: block; font-size: 12px; color: #aaa; margin-top: 15px; text-align: center; font-style: italic; }
+
+/* ================= 骰子专属样式 ================= */
+.dice-number {
+  font-size: 120px;
+  font-weight: 900;
+  color: #2c3e50;
+  text-shadow: 2px 4px 10px rgba(0,0,0,0.1);
+  transition: transform 0.1s;
+}
+.rolling {
+  transform: scale(1.1) rotate(5deg);
+  color: #3498db;
+}
+.dice-btn {
+  background: linear-gradient(135deg, #ff9a44 0%, #fc6076 100%);
+  box-shadow: 0 6px 15px rgba(252, 96, 118, 0.3);
+}
+.click-hint { font-size: 13px; color: #999; margin-top: 15px; }
+
+/* ================= 转盘专属样式 ================= */
+.wheel-box {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 红色指针 */
+.wheel-pointer {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-top: 30px solid #e74c3c;
+  z-index: 10;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); /* 让指针有悬浮立体感 */
+}
+
+/* 圆形转盘主体 */
+.wheel-main {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  border: 6px solid #fff; /* 白色的外圈粗边框 */
+  box-sizing: border-box;
+}
+
+/* 锥形渐变背景层 */
+.wheel-bg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* 扇形内的文字容器 */
+.wheel-text-wrapper {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 30px;
+  height: 50%; /* 长度正好从圆心到边缘 */
+  margin-left: -15px; /* 宽度的一半，保证绝对居中 */
+  transform-origin: bottom center; /* ✨ 重点：旋转轴心设在容器底部的正中间（即圆心） */
+  display: flex;
+  justify-content: center;
+  padding-top: 15px; /* 让文字离边缘有一点距离 */
+  box-sizing: border-box;
+  z-index: 5;
+}
+
+/* 垂直排列的文字 */
+.wheel-text {
+  writing-mode: vertical-rl; /* 文字竖向排版 */
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  letter-spacing: 2px;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.4); /* 让白字在亮色底上依然清晰 */
+}
+
+/* 结果展示区 */
+.result-display {
+  height: 40px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.result-text.spinning {
+  color: #999;
+  font-size: 16px;
+}
+
+.result-text.done {
+  color: #e74c3c;
+  font-size: 20px;
+  font-weight: 900;
+  animation: bounceIn 0.5s ease; /* 出结果时弹一下 */
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  80% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+
+/* 预设场景 */
+.preset-section { width: 85%; margin-bottom: 20px; }
+.preset-list { display: flex; gap: 10px; flex-wrap: wrap; }
+.preset-btn {
+  background: #fff;
+  padding: 6px 15px;
+  border-radius: 15px;
+  font-size: 13px;
+  color: #3498db;
+  border: 1px solid #3498db;
+}
+
+/* 输入栏 */
+.add-bar {
+  display: flex;
+  margin-bottom: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 5px;
+}
+.add-input { flex: 1; padding: 5px 10px; font-size: 14px; }
+.add-btn {
+  background: #3498db;
+  color: #fff;
+  padding: 5px 15px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* 标签项 */
+.tag-item {
+  background: #f0f7ff;
+  color: #3498db;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+}
+.delete-icon {
+  margin-left: 5px;
+  font-size: 16px;
+  color: #ff4d4f;
+  font-weight: bold;
+}
+
+/* ================= 场景管理专属样式 ================= */
+
+.scene-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.add-scene-btn {
+  background: #e7f5ff;
+  color: #3498db;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.scene-scroll {
+  width: 100%;
+  white-space: nowrap; /* 开启横向滚动必须的属性 */
+}
+
+.scene-list {
+  display: inline-flex;
+  gap: 10px;
+  padding-bottom: 5px; /* 留出一点空间给阴影 */
+}
+
+.scene-tab {
+  background: #fff;
+  color: #666;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid #eee;
+  transition: all 0.2s ease;
+}
+
+.scene-tab.active {
+  background: #3498db;
+  color: #fff;
+  border-color: #3498db;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+}
+
+.empty-hint {
+  font-size: 13px;
+  color: #999;
+  width: 100%;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.settings-card {
+  width: 85%;
+  background: #fff;
+  border-radius: 20px;
+  padding: 20px;
+  margin-top: 30px;
+  margin-bottom: 40px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.03); /* 极其柔和的高级阴影 */
+  box-sizing: border-box;
+}
+
+/* 覆盖原本的宽度，让内部元素充满卡片 */
+.scene-manager {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+/* 优雅的细线分割 */
+.divider {
+  height: 1px;
+  background: #f0f2f5;
+  margin: 18px 0;
+  border-radius: 1px;
+}
+
+.options-manager {
+  width: 100%;
+}
+
+.section-title { 
+  font-size: 15px; /* 稍微调大一点点标题 */
+  color: #333; 
+  font-weight: 800; 
+  margin-bottom: 0; 
+}
+
+.hint-text {
+  display: block;
+  font-size: 11px;
+  color: #c0c4cc;
+  margin-top: 8px;
+  text-align: right;
+  letter-spacing: 0.5px;
+}
+
+/* ================= 骰子控制区 ================= */
+.control-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+  color: #333;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.dice-slider { margin: 0; }
+
+/* ================= ✨ 3D 骰子物理引擎 ================= */
+.dice-arena {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 25px; /* 多颗骰子之间的间距 */
+  width: 90%;
+  min-height: 150px; /* 保证高度撑开 */
+  margin-bottom: 20px;
+  margin-top: 20px;
+  perspective: 1000px; /* 激活极其关键的 3D 透视视角 */
+}
+
+.scene {
+  width: 70px;
+  height: 70px;
+  perspective: 1000px;
+}
+
+.cube {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d; /* 告诉浏览器这是一个立体空间，别拍扁了 */
+  /* 运用贝塞尔曲线模拟物理重力和摩擦力，先极快旋转，最后平滑刹车 */
+  transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.face {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+  box-shadow: inset 0 0 15px rgba(0,0,0,0.05), 0 4px 10px rgba(0,0,0,0.1);
+  /* 使用网格布局，排布骰子点数简直是神级优化 */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  background: #2c3e50;
+  border-radius: 50%;
+  margin: auto;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.4); /* 让点数有凹陷感 */
+}
+
+/* 物理折叠：把6个面推到它们该去的位置形成立方体 */
+.front  { transform: rotateY(  0deg) translateZ(35px); }
+.back   { transform: rotateY(180deg) translateZ(35px); }
+.right  { transform: rotateY( 90deg) translateZ(35px); }
+.left   { transform: rotateY(-90deg) translateZ(35px); }
+.top    { transform: rotateX( 90deg) translateZ(35px); }
+.bottom { transform: rotateX(-90deg) translateZ(35px); }
+
+/* ✨ 纯 CSS 魔法：精准放置 1-6 点 */
+.face-1 .dot { grid-area: 2/2; background: #e74c3c; width: 16px; height: 16px; }
+.face-2 .dot:nth-child(1) { grid-area: 1/3; } .face-2 .dot:nth-child(2) { grid-area: 3/1; }
+.face-3 .dot:nth-child(1) { grid-area: 1/3; } .face-3 .dot:nth-child(2) { grid-area: 2/2; } .face-3 .dot:nth-child(3) { grid-area: 3/1; }
+.face-4 .dot:nth-child(1) { grid-area: 1/1; } .face-4 .dot:nth-child(2) { grid-area: 1/3; } .face-4 .dot:nth-child(3) { grid-area: 3/1; } .face-4 .dot:nth-child(4) { grid-area: 3/3; }
+.face-5 .dot:nth-child(1) { grid-area: 1/1; } .face-5 .dot:nth-child(2) { grid-area: 1/3; } .face-5 .dot:nth-child(3) { grid-area: 2/2; } .face-5 .dot:nth-child(4) { grid-area: 3/1; } .face-5 .dot:nth-child(5) { grid-area: 3/3; }
+.face-6 .dot:nth-child(1) { grid-area: 1/1; } .face-6 .dot:nth-child(2) { grid-area: 1/3; } .face-6 .dot:nth-child(3) { grid-area: 2/1; } .face-6 .dot:nth-child(4) { grid-area: 2/3; } .face-6 .dot:nth-child(5) { grid-area: 3/1; } .face-6 .dot:nth-child(6) { grid-area: 3/3; }

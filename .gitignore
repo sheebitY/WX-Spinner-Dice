@@ -1,0 +1,9 @@
+# 忽略私有配置文件
+project.private.config.json
+
+# 忽略 npm 依赖包 (如果有)
+node_modules/
+miniprogram_npm/
+
+# 忽略 Mac 系统文件 (如果你用的是 Mac)
+.DS_Store
